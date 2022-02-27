@@ -41,7 +41,7 @@
 <script>
 import { date } from 'quasar';
 import { defineComponent } from 'vue';
-import { fireDB } from '../boot/firebase.js';
+//import { fireDB } from '../boot/firebase.js';
 export default defineComponent({
   name: 'SinglePost',
   props: {
@@ -63,7 +63,8 @@ export default defineComponent({
     deletePost() {
       console.log('floo', this.niceDate(1645895709399));
       console.log(this.post.id);
-      if (window.confirm('Do you really want to delete?')) {
+      /*
+     if (window.confirm('Do you really want to delete?')) {
         fireDB
           .collection('posts')
           .doc(this.post.id)
@@ -81,6 +82,7 @@ export default defineComponent({
             });
           });
       }
+      */
     },
   },
 });

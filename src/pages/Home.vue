@@ -8,7 +8,7 @@
       </template>
       <template v-else>
         <div class="q-pa-md">
-          <q-card flat bordered>
+          <q-card flat bordered style="max-width: 500px">
             <q-item>
               <q-item-section avatar>
                 <q-skeleton type="QAvatar" animation="fade" />
@@ -57,9 +57,9 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
-import { date } from 'quasar';
-import SinglePost from '../components/SinglePost.vue';
+import { defineComponent } from 'vue'
+import { date } from 'quasar'
+import SinglePost from '../components/SinglePost.vue'
 export default defineComponent({
   components: { SinglePost },
   name: 'PageHome',
@@ -67,30 +67,31 @@ export default defineComponent({
     return {
       posts: [],
       loadingPosts: false,
-    };
+    }
   },
   methods: {
     niceDate(value) {
-      return date.formatDate(value, 'MMMM DD h:mmA');
+      return date.formatDate(value, 'MMMM DD h:mmA')
     },
     getPosts() {
-      console.log('Getting the posts!');
-
+      this.loadingPosts = true
       this.$axios
-        //.get("https://kitsta-backend.herokuapp.com/posts")
-        .get('http://localhost:3000/posts')
+        .get('https://kitsta-backend.herokuapp.com/posts')
         .then((response) => {
-          console.log('response: ', response);
+          this.posts = response.data
         })
         .catch((err) => {
-          console.log('whoops');
-        });
+          console.log('whoops')
+        })
+        .finally(() => {
+          this.loadingPosts = false
+        })
     },
   },
   created() {
-    this.getPosts();
+    this.getPosts()
   },
-});
+})
 </script>
 <style lang="sass">
 .card-post
