@@ -8,11 +8,15 @@
   "editor.guides.bracketPairs": "active",
 
   // font settings
-  "editor.fontWeight": "bold",
-  "editor.fontFamily": "Verdana",
+  //"editor.fontWeight": "bold",
+//  "editor.fontFamily": "Verdana",
 
   "terminal.external.osxExec": "iTerm.app",
-"terminal.integrated.defaultProfile.osx": "zsh",
-"terminal.integrated.fontFamily": "Lucida Console",
-  //"editor.fontFamily": "Helvetica"
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.fontFamily": "Lucida Console",
+
+
+  "vetur.format.defaultFormatter.js": "vscode-typescript",
+  "vetur.format.defaultFormatter.html": "js-beautify-html"
+
 }
