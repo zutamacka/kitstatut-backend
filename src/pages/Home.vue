@@ -7,8 +7,8 @@
         </div>
       </template>
       <template v-else>
-        <div class="q-pa-md">
-          <q-card flat bordered style="max-width: 500px">
+        <div class="col-12 col-sm-8">
+          <q-card flat bordered>
             <q-item>
               <q-item-section avatar>
                 <q-skeleton type="QAvatar" animation="fade" />
@@ -75,6 +75,7 @@ export default defineComponent({
     },
     getPosts() {
       this.loadingPosts = true
+      // load posts from Heroku server via axios & express
       this.$axios
         .get('https://kitsta-backend.herokuapp.com/posts')
         .then((response) => {
