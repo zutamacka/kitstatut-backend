@@ -23,43 +23,53 @@ initializeApp({
 // admin.initializeApp({
 //   credential: admin.credential.cert(serviceAccount)
 // });
-
 const db = getFirestore();
 
 /*
   config - express
 */
-
 const app = express()
 let port = 3000
-/*
-  endpoint - posts
-*/
 
+
+/*
+  endpoint - test
+*/
 app.get('/', (request, response) => {
   response.send('FLOOey')
 })
 
-
-
-//express request from firbase
+/*
+  endpoint - posts
+*/
 app.get('/posts', (request, response) => {
-  let posts = [ ]
+  // access for Heroku
   response.set("Access-Control-Allow-Origin", "*")
-  db.collection('posts').get().then(snapshot => {
+  //
+  let posts = [] 
+  db.collection('posts').orderBy('date','desc').get().then(snapshot => {
     snapshot.forEach((doc) => {
       posts.push(doc.data())
     });
      response.send(posts)
   })
-
   console.log('Demonic powers compel you');
 })
 
 /*
-  listen
+  endpoint - create post
 */
-//this is for HEROKU
+app.get('/posts-create', (request, response) => {
+  response.set("Access-Control-Allow-Origin", "*")
+
+  response.send('Demonic powers compel you')
+  console.log('Demonic powers compel you');
+})
+
+
+/*
+  listen on Heroku or home port 
+*/
 app.listen(process.env.PORT || port, () => {
   console.log(`${port}`)
   console.log('Demonic powers compel you');

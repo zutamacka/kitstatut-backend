@@ -1,42 +1,16 @@
 <template>
   <q-page class="constrain q-pa-md">
     <div class="row q-col-gutter-md">
-      <template v-if="!loadingPosts">
+      <template v-if="!loadingPosts && posts.length">
         <div class="col-12 col-sm-8">
           <single-post v-for="post in posts" :key="post.id" :post="post" />
         </div>
       </template>
+      <template v-else-if="!posts.length">
+        <no-posts />
+      </template>
       <template v-else>
-        <div class="col-12 col-sm-8">
-          <q-card flat bordered>
-            <q-item>
-              <q-item-section avatar>
-                <q-skeleton type="QAvatar" animation="fade" />
-              </q-item-section>
-
-              <q-item-section>
-                <q-item-label>
-                  <q-skeleton type="text" animation="fade" />
-                </q-item-label>
-                <q-item-label caption>
-                  <q-skeleton type="text" animation="fade" />
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-
-            <q-skeleton height="200px" square animation="fade" />
-
-            <q-card-section>
-              <q-skeleton type="text" class="text-subtitle2" animation="fade" />
-              <q-skeleton
-                type="text"
-                width="50%"
-                class="text-subtitle2"
-                animation="fade"
-              />
-            </q-card-section>
-          </q-card>
-        </div>
+        <skeleton-post />
       </template>
       <div class="col-4 large-screen-only">
         <q-item class="fixed">
@@ -60,8 +34,10 @@
 import { defineComponent } from 'vue'
 import { date } from 'quasar'
 import SinglePost from '../components/SinglePost.vue'
+import SkeletonPost from '../components/SkeletonPost.vue'
+import NoPosts from '../components/NoPosts.vue'
 export default defineComponent({
-  components: { SinglePost },
+  components: { SinglePost, SkeletonPost, NoPosts },
   name: 'PageHome',
   data() {
     return {
@@ -82,7 +58,10 @@ export default defineComponent({
           this.posts = response.data
         })
         .catch((err) => {
-          console.log('whoops')
+          this.$q.dialog({
+            title: 'Error',
+            message: 'Data Not Loaded.',
+          })
         })
         .finally(() => {
           this.loadingPosts = false
