@@ -123,6 +123,24 @@ export default defineComponent({
     },
   },
   methods: {
+    pawst() {
+      console.log(this.post)
+      let formData = new FormData()
+      formData.append('id', this.post.id)
+      formData.append('caption', this.post.caption)
+      formData.append('date', this.post.date)
+      formData.append('location', this.post.location)
+      formData.append('file', this.post.photo, this.post.id + '.png')
+
+      this.$axios
+        .post(`${process.env.API}/posts-create`, formData)
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((err) => {
+          console.log('whoopsie!')
+        })
+    },
     initCamera() {
       navigator.mediaDevices
         .getUserMedia({
@@ -223,10 +241,6 @@ export default defineComponent({
         title: 'Error',
         message: 'Location Unknown',
       })
-    },
-
-    pawst() {
-      console.log(this.post)
     },
     dataURItoBlob(dataURI) {
       // convert base64 to raw binary data held in a string

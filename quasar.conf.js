@@ -8,6 +8,9 @@
 
 const { configure } = require('quasar/wrappers')
 
+    let API_LOCAL =  'http://localhost:3000'
+    let API_PRODUCTION =  'https://kitsta-backend.herokuapp.com'
+
 module.exports = configure(function (ctx) {
   return {
     // https://quasar.dev/quasar-cli/supporting-ts
@@ -41,6 +44,10 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
+      // environment variables for switching between live and local server (Exporess)
+      env: {
+        API: API_LOCAL // API_LOCAL | API_PRODUCTION
+      },
 
       // transpile: false,
       // publicPath: '/',

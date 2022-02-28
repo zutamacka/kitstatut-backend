@@ -6,7 +6,7 @@
           <single-post v-for="post in posts" :key="post.id" :post="post" />
         </div>
       </template>
-      <template v-else-if="!posts.length">
+      <template v-else-if="!loadingPosts && !posts.length">
         <no-posts />
       </template>
       <template v-else>
@@ -52,8 +52,9 @@ export default defineComponent({
     getPosts() {
       this.loadingPosts = true
       // load posts from Heroku server via axios & express
+      let heroku = 'https://kitsta-backend.herokuapp.com/posts'
       this.$axios
-        .get('https://kitsta-backend.herokuapp.com/posts')
+        .get(`${process.env.API}/posts`)
         .then((response) => {
           this.posts = response.data
         })
