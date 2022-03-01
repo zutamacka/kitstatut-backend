@@ -21,6 +21,7 @@
           <q-btn
             v-if="hasCameraSupport"
             @click="captureImage"
+            :disable="imageCaptured"
             round
             color="grey-10"
             size="lg"
@@ -44,7 +45,12 @@
           </q-file>
 
           <div class="row justify-center q-ma-md">
-            <q-input v-model="post.caption" class="col col-sm-8" label="Caption" dense />
+            <q-input
+              v-model="post.caption"
+              class="col col-sm-8"
+              label="Caption *"
+              dense
+            />
           </div>
           <div class="row justify-center q-ma-md">
             <q-input
@@ -70,6 +76,7 @@
               unelevated
               rounded
               @click="pawst"
+              :disable="!post.caption.length || !post.photo"
               color="secondary"
               label="PAWST IMAGE"
               icon="pets"
@@ -136,6 +143,21 @@ export default defineComponent({
         .post(`${process.env.API}/posts-create`, formData)
         .then((response) => {
           console.log(response)
+          // send to the Home page after a successful post
+          this.$router.push('/')
+          // notify about posting
+          this.$q.notify({
+            message: 'Post created',
+            // color: 'primary',
+            // avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
+            //avatar: '~assets/MaineCoon.png',
+            actions: [
+              {
+                label: 'Dismiss',
+                color: 'primary',
+              },
+            ],
+          })
         })
         .catch((err) => {
           console.log('whoopsie!')

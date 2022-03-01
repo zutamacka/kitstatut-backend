@@ -52,7 +52,6 @@ export default defineComponent({
     getPosts() {
       this.loadingPosts = true
       // load posts from Heroku server via axios & express
-      let heroku = 'https://kitsta-backend.herokuapp.com/posts'
       this.$axios
         .get(`${process.env.API}/posts`)
         .then((response) => {

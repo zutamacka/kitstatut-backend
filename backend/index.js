@@ -82,7 +82,7 @@ app.post('/posts-create', (request, response) => {
   let fields = {}
   let fileData = {}
 
-  //on-file hook do this for every file
+    //on-file hook do this for every file
   bb.on('file', (name, file, info) => {
     const { filename, encoding, mimeType } = info;
     console.log(
@@ -110,10 +110,8 @@ app.post('/posts-create', (request, response) => {
   // here is where you actually insert stuff into the firestore db
   bb.on('close', () => {
     console.log('fields: ', fields);
-   
 
-
-   // upload file from tmp folder on the server into the firestore storage bucket
+    // upload the file from the tmp folder on the server into the firestore storage bucket
     bucket.upload(
       fileData.filepath, 
       {
@@ -134,6 +132,7 @@ app.post('/posts-create', (request, response) => {
       }
     )
 
+    // creates a file and post on firebase
     function createFile(uploadedFile) {
       // post fields to firestore
       db.collection('posts').doc(fields.id).set({
@@ -147,7 +146,6 @@ app.post('/posts-create', (request, response) => {
         response.send('Post added: ' + fields.id )
       })
     }
-
 
     //response.send('Done parsing form.');
     console.log('Done parsing form. Demonic powers compel you');
