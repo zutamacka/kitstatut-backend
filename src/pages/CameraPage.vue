@@ -131,6 +131,11 @@ export default defineComponent({
   },
   methods: {
     pawst() {
+      this.$q.loading.show({
+        message: 'Posting...',
+        delay: 400, // ms
+      })
+
       console.log(this.post)
       let formData = new FormData()
       formData.append('id', this.post.id)
@@ -160,7 +165,13 @@ export default defineComponent({
           })
         })
         .catch((err) => {
-          console.log('whoopsie!')
+          this.$q.dialog({
+            title: 'Error',
+            message: 'Posting failed.',
+          })
+        })
+        .finally(() => {
+          this.$q.loading.hide()
         })
     },
     initCamera() {
