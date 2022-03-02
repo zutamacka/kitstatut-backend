@@ -133,10 +133,8 @@ export default defineComponent({
     pawst() {
       this.$q.loading.show({
         message: 'Posting...',
-        delay: 400, // ms
       })
 
-      console.log(this.post)
       let formData = new FormData()
       formData.append('id', this.post.id)
       formData.append('caption', this.post.caption)
@@ -152,10 +150,7 @@ export default defineComponent({
           this.$router.push('/')
           // notify about posting
           this.$q.notify({
-            message: 'Post created',
-            // color: 'primary',
-            // avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
-            //avatar: '~assets/MaineCoon.png',
+            message: 'Post created.',
             actions: [
               {
                 label: 'Dismiss',
@@ -165,6 +160,7 @@ export default defineComponent({
           })
         })
         .catch((err) => {
+          console.log('error ', err)
           this.$q.dialog({
             title: 'Error',
             message: 'Posting failed.',

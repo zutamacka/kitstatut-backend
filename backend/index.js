@@ -9,7 +9,7 @@ const express = require('express')
 // download from firebase by creating a web app, save in folder and adjust path
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
-const { getStorage } = require('firebase-admin/storage');
+const { getStorage  } = require('firebase-admin/storage');
 const serviceAccount = require('./serviceAccountKey.json');
 /*
   config - firestore
@@ -22,6 +22,7 @@ initializeApp({
 
 const db = getFirestore();
 const bucket = getStorage().bucket();
+//const storage = getStorage();
 
 /*
   dependencies - busboy
@@ -43,6 +44,19 @@ let UUID = require('uuid-v4')
 const app = express()
 let port = 3000
 
+
+/*
+  config - cors
+*/
+//https://stackoverflow.com/questions/43871637/no-access-control-allow-origin-header-is-present-on-the-requested-resource-whe
+const cors=require("cors");
+const corsOptions ={
+   origin:'*', 
+   credentials:true,            //access-control-allow-credentials:true
+   optionSuccessStatus:200,
+}
+
+app.use(cors(corsOptions)) // Use this after the variable declaration
 
 /*
   endpoint - test
@@ -146,13 +160,60 @@ app.post('/posts-create', (request, response) => {
         response.send('Post added: ' + fields.id )
       })
     }
-
-    //response.send('Done parsing form.');
     console.log('Done parsing form. Demonic powers compel you');
   });
   request.pipe(bb);
 })
 
+
+/*
+  endpoint - delete post
+*/
+
+
+/*
+  endpoint - delete
+*/
+// https://expressjs.com/en/guide/routing.html
+app.delete('/delete/:id', (request, response) => {
+  // access for Heroku
+  response.set("Access-Control-Allow-Origin", "*")
+
+  let post = {}
+  
+  // get the actual post so we can have the info. unnecessary but let's have it.
+  db.collection('posts').where("id", "==", request.params.id).get()
+    .then((querySnapshot) => {
+      
+      querySnapshot.forEach((doc) => {
+        
+        post = doc.data()
+
+        //console.log(post.imageUrl);
+        // if we got the post,
+        let fileName = post.id + '.png'
+        console.log(fileName);
+         const file = bucket.file(fileName);
+        file.delete().then(() => {
+          db.collection('posts').doc(post.id).delete()
+          .then(() => {
+            console.log('post ' + post.id + ' deleted');
+          })
+          .catch((error) => {
+            console.log('post not deleted', error );
+          });
+        }).catch((error) => {
+          console.log('Storage file couldnt be deleted.', error);
+        });
+      });
+  })
+  .catch((error) => {
+      console.log("Error getting posts: ", error);
+  });
+
+
+
+})
 
 /*
   listen on Heroku or home port 

@@ -45,7 +45,7 @@ module.exports = configure(function (ctx) {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       // environment variables for switching between live and local server (Exporess)
       env: {
-        API: API_LOCAL // API_LOCAL | API_PRODUCTION
+        API: API_LOCAL// API_LOCAL | API_PRODUCTION
       },
 
       // transpile: false,

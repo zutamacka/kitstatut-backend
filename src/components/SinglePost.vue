@@ -39,8 +39,8 @@
 </template>
 
 <script>
-import { date } from 'quasar';
-import { defineComponent } from 'vue';
+import { date } from 'quasar'
+import { defineComponent } from 'vue'
 //import { fireDB } from '../boot/firebase.js';
 export default defineComponent({
   name: 'SinglePost',
@@ -50,42 +50,47 @@ export default defineComponent({
   },
   created() {},
   data() {
-    return {};
+    return {}
   },
   methods: {
     niceDate(value) {
-      console.log('fired');
-      const dat = date.formatDate(value, 'MMMM DD h:mmA');
-      console.log('date', dat);
-      // return date.formatDate(value, 'MMMM DD h:mmA')
-      return dat;
+      return date.formatDate(value, 'MMMM DD h:mmA')
     },
     deletePost() {
-      console.log('floo', this.niceDate(1645895709399));
-      console.log(this.post.id);
-      /*
-     if (window.confirm('Do you really want to delete?')) {
-        fireDB
-          .collection('posts')
-          .doc(this.post.id)
-          .delete()
-          .then(() => {
-            this.$q.dialog({
-              title: 'Succes!',
-              message: 'Post Deleted.',
-            });
+      // this.$q.loading.show({
+      //   message: 'Deleting...',
+      // })
+      console.log(this.post.id)
+      this.$axios
+        .delete(`${process.env.API}/delete/${this.post.id}`)
+        .then((response) => {
+          console.log('response', response)
+          // send to the Home page after a successful post
+          this.$router.push('/')
+          // notify about posting
+          this.$q.notify({
+            message: 'Post deleted.',
+            actions: [
+              {
+                label: 'Dismiss',
+                color: 'primary',
+              },
+            ],
           })
-          .catch((error) => {
-            this.$q.dialog({
-              title: 'Error',
-              message: 'Delete Failed.',
-            });
-          });
-      }
-      */
+        })
+        .catch((err) => {
+          console.log('error ', err)
+          this.$q.dialog({
+            title: 'Error',
+            message: 'Deleting failed.',
+          })
+        })
+        .finally(() => {
+          // this.$q.loading.hide()
+        })
     },
   },
-});
+})
 </script>
 
 <style lang="sass"></style>
