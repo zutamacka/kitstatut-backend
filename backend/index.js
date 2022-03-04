@@ -58,6 +58,16 @@ const corsOptions ={
 
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
+
+
+/*
+  listen on Heroku or home port 
+*/
+app.listen(process.env.PORT || port, () => {
+  console.log(`${port}`)
+  console.log('Demonic powers compel you');
+})
+
 /*
   endpoint - test
 */
@@ -72,13 +82,26 @@ app.get('/posts', (request, response) => {
   // access for Heroku
   response.set("Access-Control-Allow-Origin", "*")
   //
+  
   let posts = [] 
+
   db.collection('posts').orderBy('date','desc').get().then(snapshot => {
     snapshot.forEach((doc) => {
       posts.push(doc.data())
     });
      response.send(posts)
   })
+
+  // db
+  // .collection('posts')
+  // .orderBy('date', 'desc')
+  //   .onSnapshot((snapshotChange) => {
+  //     snapshotChange.forEach((doc) => {
+  //       posts.push(doc.data())
+  //     })
+  //     response.send(posts)
+  //   })
+
 })
 
 /*
@@ -169,11 +192,6 @@ app.post('/posts-create', (request, response) => {
 /*
   endpoint - delete post
 */
-
-
-/*
-  endpoint - delete
-*/
 // https://expressjs.com/en/guide/routing.html
 app.delete('/delete/:id', (request, response) => {
   // access for Heroku
@@ -187,14 +205,14 @@ app.delete('/delete/:id', (request, response) => {
       
       querySnapshot.forEach((doc) => {
         
+        // get the post
         post = doc.data()
-
-        //console.log(post.imageUrl);
-        // if we got the post,
+        //create the fileName
         let fileName = post.id + '.png'
-        console.log(fileName);
-         const file = bucket.file(fileName);
+      
+        const file = bucket.file(fileName);
         file.delete().then(() => {
+          // if the file is deleted, proceed to delete the post
           db.collection('posts').doc(post.id).delete()
           .then(() => {
             console.log('post ' + post.id + ' deleted');
@@ -215,10 +233,3 @@ app.delete('/delete/:id', (request, response) => {
 
 })
 
-/*
-  listen on Heroku or home port 
-*/
-app.listen(process.env.PORT || port, () => {
-  console.log(`${port}`)
-  console.log('Demonic powers compel you');
-})

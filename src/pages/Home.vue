@@ -68,6 +68,7 @@ export default defineComponent({
         })
     },
   },
+  computed: {},
   created() {
     this.getPosts()
   },
